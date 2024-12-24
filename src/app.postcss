@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply font-sans antialiased bg-black text-white;
+  }
+}
+
+@layer components {
+  .shadow-sectionBoxShadow {
+    box-shadow: 0 3px 8px -1px rgba(0, 0, 0, 0.08);
+  }
+  
+  .shadow-sectionBoxShadowHover {
+    box-shadow: 0 6px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  .backdrop-text {
+    @apply relative pt-4 mb-5 text-white;
+  }
+
+  .backdrop-text::before {
+    @apply content-['//'] pr-2;
+  }
+
+  .backdrop-text::after {
+    @apply content-[attr(data-backdrop-text)] absolute top-0 left-0 font-poppins font-bold uppercase text-4xl opacity-15;
+  }
+}
