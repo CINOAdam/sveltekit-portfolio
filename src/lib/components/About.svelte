@@ -1,6 +1,6 @@
 <script>
   import Icon from '@iconify/svelte';
-  import { onDestroy } from 'svelte';
+
   
   const skills = [
     { icon: 'ph:cloud', name: 'AWS', percentage: 100 },
@@ -118,7 +118,7 @@
     font-size: 3.5rem;
     font-weight: 700;
     opacity: 0.05;
-    font-family: theme('fontFamily.poppins');
+    font-family: theme('fontFamily.poppins'),serif;
     letter-spacing: 0.05em;
   }
 </style>

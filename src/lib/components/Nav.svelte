@@ -1,15 +1,17 @@
 <script>
   const navItems = [
     { name: 'About Me', shortName: 'A', href: '#about' },
-    { name: 'Portfolio', shortName: 'P', href: '#portfolio' },
     { name: 'Services', shortName: 'S', href: '#services' },
+    { name: 'Portfolio', shortName: 'P', href: '#portfolio' },
     { name: 'Testimonial', shortName: 'T', href: '#testimonial' },
     { name: 'Resume', shortName: 'R', href: '#resume' },
     { name: 'Blog', shortName: 'B', href: '#blog' },
-    { name: 'Contact', shortName: 'C', href: '#contact' }
+    { name: 'Full Bio', shortName: 'F', href: '/bio' },
   ];
 
-  let activeSection = $state('about');
+  import { onMount } from 'svelte';
+  
+  let activeSection = 'about';
 
   function updateActiveSection() {
     const sections = document.querySelectorAll('section[id]');
@@ -26,7 +28,7 @@
     });
   }
 
-  $effect(() => {
+  onMount(() => {
     if (typeof window !== 'undefined') {
       window.addEventListener('scroll', updateActiveSection);
       return () => window.removeEventListener('scroll', updateActiveSection);

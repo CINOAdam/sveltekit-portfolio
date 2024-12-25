@@ -1,12 +1,37 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
-		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
-		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
-		adapter: adapter()
+		// Configure for static site generation
+		adapter: adapter({
+			// default options:
+			pages: 'build',
+			assets: 'build',
+			fallback: 'index.html',
+			precompress: false,
+			strict: true
+		}),
+		// Enable prerendering
+		prerender: {
+			entries: ['*'],
+			handleHttpError: ({ path, referrer, message }) => {
+				// Ignore 404s from portfolio links
+				if (path.startsWith('/portfolio/')) {
+					return;
+				}
+				// Otherwise throw the error
+				throw new Error(message);
+			},
+			handleMissingId: ({ id }) => {
+				// Ignore missing section IDs - they're handled by the SPA routing
+				const knownSectionIds = ['testimonial', 'about', 'portfolio', 'blog', 'contact', 'services', 'resume'];
+				if (knownSectionIds.includes(id)) {
+					return;
+				}
+				throw new Error(`Missing ID "${id}"`);
+			}
+		}
 	}
 };
 

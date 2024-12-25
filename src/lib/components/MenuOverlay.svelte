@@ -1,13 +1,18 @@
 <script>
   import Icon from '@iconify/svelte';
   
-  let isVisible = $state(false);
+  let isVisible = false;
 
-  $effect(() => {
+  function toggleMenu(event) {
+    isVisible = !isVisible;
+  }
+
+  import { onMount } from 'svelte';
+
+  onMount(() => {
     if (typeof window !== 'undefined') {
-      window.addEventListener('toggle-menu', () => {
-        isVisible = !isVisible;
-      });
+      window.addEventListener('toggle-menu', toggleMenu);
+      return () => window.removeEventListener('toggle-menu', toggleMenu);
     }
   });
 </script>

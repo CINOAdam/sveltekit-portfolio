@@ -1,23 +1,39 @@
 <script>
+  import { onMount } from 'svelte';
   import Header from './Header.svelte';
   import Nav from './Nav.svelte';
   import MenuOverlay from './MenuOverlay.svelte';
+  import { getStores } from '$app/stores';
 
-  let menuOverlay;
+  const { page } = getStores();
+
+  let menuOverlayElement;
+  let isMenuOpen = false;
 
   function handleClickOutside(event) {
-    const isClickInside = menuOverlay?.contains(event.target);
+    if (!menuOverlayElement || !isMenuOpen) return;
+    
+    const isClickInside = event.composedPath().includes(menuOverlayElement);
     const isMenuButton = event.target.closest('.menu-btn');
     
     if (!isClickInside && !isMenuButton) {
-      window.dispatchEvent(new CustomEvent('toggle-menu', { detail: { close: true } }));
+      isMenuOpen = false;
+      window.dispatchEvent(new CustomEvent('toggle-menu'));
     }
   }
 
-  $effect(() => {
+  function handleToggleMenu() {
+    isMenuOpen = !isMenuOpen;
+  }
+
+  onMount(() => {
     if (typeof window !== 'undefined') {
       window.addEventListener('click', handleClickOutside);
-      return () => window.removeEventListener('click', handleClickOutside);
+      window.addEventListener('toggle-menu', handleToggleMenu);
+      return () => {
+        window.removeEventListener('click', handleClickOutside);
+        window.removeEventListener('toggle-menu', handleToggleMenu);
+      };
     }
   });
 </script>
@@ -27,15 +43,17 @@
     <Header />
     
     <div class="space-y-6 lg:flex lg:space-x-12 lg:space-y-0 min-h-[calc(100vh-5rem)] pt-6">
-      <div class="lg:w-1/4 min-w-[280px]">
-        <Nav />
-      </div>
+      {#if !$page.url.pathname.includes('/bio')}
+        <div class="lg:w-1/4 min-w-[280px]">
+          <Nav />
+        </div>
+      {/if}
       <div class="lg:w-3/4 space-y-6 pb-12 flex-1">
         <slot />
       </div>
     </div>
     
-    <MenuOverlay bind:this={menuOverlay} />
+    <MenuOverlay bind:this={menuOverlayElement} />
   </div>
 </div>
 
